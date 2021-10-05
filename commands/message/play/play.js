@@ -29,6 +29,9 @@ module.exports = {
             }
             console.log(gameData.games)
             message.reply(`<@${gameData.players[0].id}>\n` + gameRendering(gameData.games))
-        } else client.gameData.delete(message.channel.id)
+        } else {
+            client.gameData.delete(message.channel.id)
+            message.reply('이 채널의 게임판을 종료했습니다.')
+        }
     }
 }
