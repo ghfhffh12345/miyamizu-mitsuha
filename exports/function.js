@@ -21,4 +21,8 @@ function numberChange(string, number, change) {
     return string.substring(0, number - 1) + change + string.substring(number, string.length)
 }
 
+function tgameRendering(arrayData) {
+    
+}
+
 exports.gameRendering = gameRendering

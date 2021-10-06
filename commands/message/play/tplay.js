@@ -8,8 +8,10 @@ module.exports = {
         .setDescription('[Command] => 테트리스 게임을 시작합니다.'),
     aliases: ['tp'],
     execute(message, client, commandArgs) {
-        if (client.tgameData.has(message.channel.id)) {
-            
+        if (!client.tgameData.has(message.author.id)) {
+            client.tgameData.set(message.author.id, [
+                [], [], [], [], [], [], [], [], [], [], []
+            ])
         }
     }
 }
