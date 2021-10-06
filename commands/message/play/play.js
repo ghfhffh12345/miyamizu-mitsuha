@@ -22,9 +22,13 @@ module.exports = {
                 gameData = client.gameData.get(message.channel.id)
             } else {
                 if (gameData.players[0].id == message.author.id) {
-                    gameData.games[parseInt(commandArgs[0], 10) - 1].push({ number: parseInt(commandArgs[1], 10), color: gameData.players[0].color })
-                    gameData.players.push(gameData.players[0])
-                    gameData.players.shift()
+                    if ((commandArgs[0] > 0 && commandArgs[0] <= 10) || (commandArgs[1] > 0 && commandArgs[1] <= 10)) {
+                        gameData.games[parseInt(commandArgs[0], 10) - 1].push({ number: parseInt(commandArgs[1], 10), color: gameData.players[0].color })
+                        gameData.players.push(gameData.players[0])
+                        gameData.players.shift()
+                    }
+                } else {
+                    return message.reply(`${message.author.username}님은 게임에 참가하지 못했어요!`)
                 }
             }
             console.log(gameData.games)
