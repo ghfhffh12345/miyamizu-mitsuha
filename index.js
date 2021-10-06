@@ -8,6 +8,7 @@ const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'
 const commandFolders = fs.readdirSync('./commands')
 client.commands = new Collection()
 client.gameData = new Collection()
+client.tgameData = new Collection()
 
 for (const folder of commandFolders) {
     const commandFolders2 = fs.readdirSync(`./commands/${folder}`)

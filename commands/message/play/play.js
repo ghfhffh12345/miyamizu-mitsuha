@@ -6,7 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescription('[Command] [other user id] => 오목 게임을 시작합니다.'),
-    aliases: ['p', 'play'],
+    aliases: ['p'],
     number_of_elements: 2,
     execute(message, client, commandArgs) {
         let gameData = client.gameData.get(message.channel.id)
@@ -22,7 +22,7 @@ module.exports = {
                 gameData = client.gameData.get(message.channel.id)
             } else {
                 if (gameData.players[0].id == message.author.id) {
-                    if ((commandArgs[0] > 0 && commandArgs[0] <= 10) || (commandArgs[1] > 0 && commandArgs[1] <= 10)) {
+                    if ((parseInt(commandArgs[0], 10) > 0 && parseInt(commandArgs[0], 10) <= 10) || (parseInt(commandArgs[1], 10) > 0 && parseInt(commandArgs[1], 10) <= 10)) {
                         gameData.games[parseInt(commandArgs[0], 10) - 1].push({ number: parseInt(commandArgs[1], 10), color: gameData.players[0].color })
                         gameData.players.push(gameData.players[0])
                         gameData.players.shift()
