@@ -8,7 +8,7 @@ module.exports = {
 
         const commandArgs = message.content.trim().slice(prefix.length).split(' ')
         let command = client.commands.get(commandArgs[0])
-            || client.commands.find(cmd => cmd.command.aliases && cmd.command.aliases.includes(commandArgs[0]))
+            || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandArgs[0]))
 
         if (!command) return
         if (command.number_of_elements) {
