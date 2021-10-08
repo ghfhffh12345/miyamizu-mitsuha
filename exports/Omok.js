@@ -9,23 +9,24 @@ class Omok {
     gameDataRendering() {
         let RenderingData = '⬛1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟\n'
         let NumberData = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+        let lineData
 
         this.gameData.forEach((element, index) => {
             RenderingData += NumberData[index]
-            this.lineData = '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛'
+            lineData = '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛'
 
             element.forEach(stonData => {
-                this.lineData = this.lineDataChange(stonData.number, stonData.stone)
+                lineData = this.lineDataChange(lineData, stonData.number, stonData.stone)
             })
 
-            RenderingData += this.lineData + '\n'
+            RenderingData += lineData + '\n'
         })
 
         return `<@${this.userData[0].id}>\n` + RenderingData.replace(/a/gi, '🔵').replace(/b/gi, '🔴')
     }
 
-    lineDataChange(number, change) {
-        return this.lineData.substring(0, number - 1) + change + this.lineData.substring(number, this.lineData.length)
+    lineDataChange(lineData, number, change) {
+        return lineData.substring(0, number - 1) + change + lineData.substring(number, lineData.length)
     }
 
     setUsersData(first_user, second_user) {
