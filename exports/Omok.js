@@ -1,4 +1,11 @@
 class Omok {
+    constructor (games){
+        if (games) {
+            this.userData = games.userData
+            this.gameData = games.gameData
+        }
+    }
+
     gameDataRendering() {
         let RenderingData = '⬛1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟\n'
         let NumberData = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
@@ -32,6 +39,10 @@ class Omok {
             this.userData.push(this.userData[0])
             this.userData.shift()
         }
+    }
+
+    getGames() {
+        return { userData: this.userData, gameData: this.gameData }
     }
 }
 

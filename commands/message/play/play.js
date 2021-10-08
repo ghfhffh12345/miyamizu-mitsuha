@@ -11,14 +11,16 @@ module.exports = {
 
         if (commandArgs[0] != 'end') {
             let OmokData
+
             if (!client.gameData.has(message.channel.id)) {
                 OmokData = new Omok()
                 OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
-                client.gameData.set(message.channel.id, OmokData)
             } else {
-                OmokData = client.gameData.get(message.channel.id)
+                OmokData = new Omok(client.gameData.get(message.channel.id))
                 OmokData.pushData(message.author.id, parseInt(commandArgs[0], 10), parseInt(commandArgs[1], 10))
             }
+
+            client.gameData.set(message.channel.id, OmokData.getGames())
             message.channel.send(OmokData.gameDataRendering())
         } else {
             client.gameData.delete(message.channel.id)
