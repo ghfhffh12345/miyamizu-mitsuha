@@ -13,7 +13,7 @@ module.exports = {
             let OmokData
             if (!client.gameData.has(message.channel.id)) {
                 OmokData = new Omok()
-                OmokData.setUsersData(message.author.id, commandArgs[0])
+                OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
                 client.gameData.set(message.channel.id, OmokData)
             } else {
                 OmokData = client.gameData.get(message.channel.id)
