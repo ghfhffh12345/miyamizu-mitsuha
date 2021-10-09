@@ -1,5 +1,5 @@
 class Omok {
-    constructor (games){
+    constructor(games) {
         if (games) {
             this.userData = games.userData
             this.gameData = games.gameData
@@ -44,6 +44,17 @@ class Omok {
 
     getGames() {
         return { userData: this.userData, gameData: this.gameData }
+    }
+
+    cheakGameOver() {
+        this.gameData.forEach(element => {
+            element.forEach(element2 => {
+                let cheak = element.find(e => e.number + 1 == element2.number)
+                if (cheak) {
+                    
+                }
+            })
+        })
     }
 }
 

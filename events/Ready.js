@@ -1,10 +1,26 @@
 const { prefix } = require('../exports/values').config
+let readyMessage = [{ message: `getGuildSize개의 서버에서 활동` }, { message: `'너의 이름은'`, type: 'WATCHING' }]
 
 module.exports = {
     name: "ready",
     once: true,
     execute(client) {
         console.log('Ready!')
-        client.user.setActivity(`${prefix}help | ${client.guilds.cache.size}개의 서버에서 활동 중! | '너의 이름은' 보는 중...`)
+        setInterval(() => {
+            if (readyMessage[0].type)
+                client.user.setActivity(putVariableString(client, readyMessage[0].message), { type: readyMessage[0].type })
+            else client.user.setActivity(putVariableString(client, readyMessage[0].message))
+
+            readyMessage.push(readyMessage[0])
+            readyMessage.shift()
+        }, 5000)
     }
+}
+
+function putVariableString(client, message) {
+    return message.replace('getGuildSize', getGuildSize(client))
+}
+
+function getGuildSize(client) {
+    return client.guilds.cache.size
 }
