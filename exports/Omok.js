@@ -39,7 +39,7 @@ class Omok {
             let _line = parseInt(line, 10) - 1
             let _number = parseInt(number, 10)
 
-            if (_line > 0 && _line < 11 && _number > 0 && _number < 11 && this.cheakStoneInGame(_line, number)) {
+            if (_line > -1 && _line < 11 && _number > 0 && _number < 11 && this.cheakStoneInGame(_line, number)) {
                 this.gameData[_line].push({ number: _number, stone: this.userData[0].stone })
                 this.userData.push(this.userData[0])
                 this.userData.shift()
@@ -62,6 +62,10 @@ class Omok {
                 let lineCount = this.horizontal_Right(this.gameData[i], this.gameData[i][j], 1)
                 lineCount += this.horizontal_Left(this.gameData[i], this.gameData[i][j], 1) - 1
                 if (lineCount == 5) return true
+                lineCount = this.vertical_Top(this.gameData[i][j], i, 1)
+                lineCount += this.vertical_Bottom(this.gameData[i][j], i, 1) - 2
+                console.log(lineCount)
+                if (lineCount == 5) return true
             }
         }
         return false
@@ -76,6 +80,30 @@ class Omok {
     horizontal_Left(array, element, number) {
         const findData = array.find(e => (e.number == element.number - number) && (e.stone == element.stone))
         if (findData != undefined) return this.horizontal_Left(array, element, number + 1)
+        return number
+    }
+
+    vertical_Top(element, line, number) {
+        const nowLine = line - number
+        if (nowLine >= 0) {
+            for (let i = 0; i < this.gameData[nowLine].length; i++) {
+                if (Object.entries(this.gameData[nowLine][i]).toString() == Object.entries(element).toString()) {
+                    return this.vertical_Top(element, line, number + 1)
+                }
+            }
+        }
+        return number
+    }
+
+    vertical_Bottom(element, line, number) {
+        const nowLine = line + number
+        if ((nowLine) < this.gameData.length) {
+            for (let i = 0; i < this.gameData[nowLine].length; i++) {
+                if (Object.entries(this.gameData[nowLine][i]).toString() == Object.entries(element).toString()) {
+                    return this.vertical_Top(element, line, number + 1)
+                }
+            }
+        }
         return number
     }
 }

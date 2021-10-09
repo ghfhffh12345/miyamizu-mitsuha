@@ -11,7 +11,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play'),
     description: description.join('\n'),
-    aliases: ['p', 'paly'],
+    aliases: ['t', 'paly'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
 
