@@ -11,7 +11,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play'),
     description: description.join('\n'),
-    aliases: ['p', 'paly'],
+    aliases: ['t', 'paly'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
 
@@ -23,7 +23,7 @@ module.exports = {
                 OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
             } else {
                 OmokData = new Omok(client.gameData.get(message.channel.id))
-                OmokData.pushData(message.author.id, parseInt(commandArgs[0], 10), parseInt(commandArgs[1], 10))
+                OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
             }
 
             client.gameData.set(message.channel.id, OmokData.getGames())

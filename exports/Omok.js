@@ -36,13 +36,16 @@ class Omok {
 
     pushData(userId, line, number) {
         if (this.userData[0].id == userId) {
-            let _line = parseInt(line, 10) - 1
-            let _number = parseInt(number, 10)
+            this.line = parseInt(line, 10) - 1
+            this.number = parseInt(number, 10)
 
-            if (_line > -1 && _line < 11 && _number > 0 && _number < 11 && this.cheakStoneInGame(_line, number)) {
-                this.gameData[_line].push({ number: _number, stone: this.userData[0].stone })
+            if (this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11 && this.cheakStoneInGame(this.line, this.number)) {
+                this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
                 this.userData.push(this.userData[0])
                 this.userData.shift()
+            } else {
+                this.line = undefined
+                this.number = undefined
             }
         }
     }
@@ -57,18 +60,19 @@ class Omok {
     }
 
     cheakGameOver() {
-        for (var i = 0; i < this.gameData.length; i++) {
-            for (var j = 0; j < this.gameData[i].length; j++) {
-                let lineCount = this.horizontal_Right(this.gameData[i], this.gameData[i][j], 1)
-                lineCount += this.horizontal_Left(this.gameData[i], this.gameData[i][j], 1) - 1
-                if (lineCount == 5) return true
-                lineCount = this.vertical_Top(this.gameData[i][j], i, 1)
-                lineCount += this.vertical_Bottom(this.gameData[i][j], i, 1) - 2
-                console.log(lineCount)
-                if (lineCount == 5) return true
-            }
+        if (this.line != undefined) {
+            const cheakDataList = this.gameData[this.line]
+            const cheakData = cheakDataList.find(e => e.number == this.number)
+    
+            let lineCount = this.horizontal_Right(cheakDataList, cheakData, 1)
+            lineCount += this.horizontal_Left(cheakDataList, cheakData, 1) - 1
+            if (lineCount == 5) return true
+    
+            lineCount = this.vertical_Top(cheakData, this.line, 1)
+            lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
+            if (lineCount == 5) return true
+            return false
         }
-        return false
     }
 
     horizontal_Right(array, element, number) {
@@ -86,11 +90,8 @@ class Omok {
     vertical_Top(element, line, number) {
         const nowLine = line - number
         if (nowLine >= 0) {
-            for (let i = 0; i < this.gameData[nowLine].length; i++) {
-                if (Object.entries(this.gameData[nowLine][i]).toString() == Object.entries(element).toString()) {
-                    return this.vertical_Top(element, line, number + 1)
-                }
-            }
+            const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
+            if (findData != undefined) return this.vertical_Top(element, line, number + 1)
         }
         return number
     }
@@ -98,11 +99,8 @@ class Omok {
     vertical_Bottom(element, line, number) {
         const nowLine = line + number
         if ((nowLine) < this.gameData.length) {
-            for (let i = 0; i < this.gameData[nowLine].length; i++) {
-                if (Object.entries(this.gameData[nowLine][i]).toString() == Object.entries(element).toString()) {
-                    return this.vertical_Top(element, line, number + 1)
-                }
-            }
+            const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
+            if (findData != undefined) return this.vertical_Top(element, line, number + 1)
         }
         return number
     }
