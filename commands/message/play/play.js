@@ -23,10 +23,8 @@ module.exports = {
                 OmokData = new Omok()
                 OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
             } else {
-                if (!commandArgs[0] == 'now') {
-                    OmokData = new Omok(client.gameData.get(message.channel.id))
-                    OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
-                }
+                OmokData = new Omok(client.gameData.get(message.channel.id))
+                OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
             }
 
             client.gameData.set(message.channel.id, OmokData.getGames())
