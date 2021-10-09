@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescription('[Command] => 오목 게임을 시작합니다.'),
-    aliases: ['t'],
+    aliases: ['p'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
 
