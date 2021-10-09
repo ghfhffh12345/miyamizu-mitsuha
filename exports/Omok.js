@@ -64,10 +64,12 @@ class Omok {
             const cheakDataList = this.gameData[this.line]
             const cheakData = cheakDataList.find(e => e.number == this.number)
     
+            // horizontal
             let lineCount = this.horizontal_Right(cheakDataList, cheakData, 1)
             lineCount += this.horizontal_Left(cheakDataList, cheakData, 1) - 1
             if (lineCount == 5) return true
     
+            // vertical
             lineCount = this.vertical_Top(cheakData, this.line, 1)
             lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
             if (lineCount == 5) return true
