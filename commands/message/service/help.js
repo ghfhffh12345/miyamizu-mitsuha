@@ -16,8 +16,24 @@ module.exports = {
     description,
     aliases: ['h'],
     execute(message, client, commandArgs) {
-        if (commandArgs.length < 2) {
+        commandArgs.shift()
+
+        if (commandArgs.length < 1) {
             message.reply({ embeds: [FolderListEmbed] })
+        } else {
+            const FolderName = commandArgs[0]
+            const FolderHelpList = fs.readdirSync(`./commands/message/${FolderName}`)
+
+            const FolderHelpEmbed = new MessageEmbed()
+                .setTitle(`미츠하 ${FolderName} help`)
+                .setDescription(description)
+                .setTimestamp()
+
+            for (file of FolderHelpList) {
+                const fileIform = require(`../../message/${FolderName}/${file}`)
+                FolderHelpEmbed.addField(`'${fileIform.data.name}' or '${fileIform.aliases.join(`' or '`)}'`, fileIform.description, false)
+            }
+            message.reply({ embeds: [FolderHelpEmbed] })
         }
     }
 }

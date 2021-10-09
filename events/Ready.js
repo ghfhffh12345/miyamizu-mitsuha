@@ -1,5 +1,5 @@
 const { prefix } = require('../exports/values').config
-let readyMessage = [{ message: `getGuildSize개의 서버에서 활동` }, { message: `'너의 이름은'`, type: 'WATCHING' }]
+let readyMessage = [{ message: `${prefix}help로 사용법을 제공` }, { message: `getGuildSize개의 서버에서 활동` }, { message: `'너의 이름은'`, type: 'WATCHING' }]
 
 module.exports = {
     name: "ready",
