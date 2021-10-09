@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescription('[Command] => 오목 게임을 시작합니다.'),
-    aliases: ['p'],
+    aliases: ['t'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
 
@@ -22,6 +22,10 @@ module.exports = {
 
             client.gameData.set(message.channel.id, OmokData.getGames())
             message.channel.send(OmokData.gameDataRendering())
+
+            if (OmokData.cheakGameOver()) {
+                return this.execute(message, client, [null, 'end'])
+            }
         } else {
             client.gameData.delete(message.channel.id)
             message.reply('이 채널의 게임판을 종료했습니다.')
