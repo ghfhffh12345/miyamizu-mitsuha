@@ -3,8 +3,8 @@ const { Omok } = require('../../../exports/Omok')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('[Command] => 오목 게임을 시작합니다.'),
+        .setName('play'),
+    description: '[Command] [Author User Mention] => 해당 채널에 오목 게임을 시작합니다.\n또는 [Command] [Line] [Number] => 해당 채널의 오목 게임 참가자라면 이 명령어로 오목을 둘 수 있습니다.',
     aliases: ['p'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
