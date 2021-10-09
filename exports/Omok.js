@@ -39,7 +39,7 @@ class Omok {
             let _line = parseInt(line, 10) - 1
             let _number = parseInt(number, 10)
 
-            if (this.cheakStoneInGame(_line, number)) {
+            if (_line > 0 && _line < 11 && _number > 0 && _number < 11 && this.cheakStoneInGame(_line, number)) {
                 this.gameData[_line].push({ number: _number, stone: this.userData[0].stone })
                 this.userData.push(this.userData[0])
                 this.userData.shift()
