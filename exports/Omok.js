@@ -35,10 +35,10 @@ class Omok {
     }
 
     pushData(userId, line, number) {
-        if (this.userData[0].id == userId) {
-            this.line = parseInt(line, 10) - 1
-            this.number = parseInt(number, 10)
+        this.line = parseInt(line, 10) - 1
+        this.number = parseInt(number, 10)
 
+        if (this.userData[0].id == userId && !isNaN(this.line) && !isNaN(this.number)) {
             if (this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11 && this.cheakStoneInGame(this.line, this.number)) {
                 this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
                 this.userData.push(this.userData[0])
