@@ -27,10 +27,10 @@ module.exports = {
                     OmokData = new Omok(client.gameData.get(message.channel.id))
                     OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
                 }
-    
+
                 client.gameData.set(message.channel.id, OmokData.getGames())
                 message.channel.send(OmokData.gameDataRendering())
-    
+
                 if (OmokData.cheakGameOver()) {
                     return this.execute(message, client, [null, 'end'])
                 }
