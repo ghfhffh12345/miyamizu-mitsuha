@@ -1,11 +1,7 @@
-const { Games } = require("./Games")
-
-class Tetris extends Games {
+class Tetris {
     constructor (games){
-        if (games) {
-            this.userId = games.userId
-            this.gameData = games.gameData
-        }
+        this.userId = games.userId
+
         // 1 means 1 block, 0 means a newline, and 2 means a space
         this.blockData = [
             [1, 0, 1, 1, 1],
@@ -14,11 +10,12 @@ class Tetris extends Games {
             [1],
             [2, 1, 0, 1, 1, 1, 0, 1]
         ]
-    }
 
-    setUsersData(userId) {
-        this.userId = userId
-        this.gameData = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        if (!games.gameData) {
+            this.gameData = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        } else {
+            this.gameData = games.gameData
+        }
     }
 
     pushData() {
@@ -26,7 +23,17 @@ class Tetris extends Games {
         this.gameData[0].push({ number: 5, block })
     }
 
-    
+    gameDataRendering() {
+        return this.getBaseRenderingData().join('\n')
+    }
+
+    getBaseRenderingData() {
+        const result = []
+        for (let i = 0; i < this.gameData.length; i++) {
+            result.push('⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+        }
+        return result
+    }
 }
 
 exports.Tetris = Tetris
