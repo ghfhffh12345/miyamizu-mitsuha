@@ -1,16 +1,12 @@
-const { Omok } = require("./Omok");
+const { Games } = require("./Games")
 
-class Tetris extends Omok {
+class Tetris extends Games {
     constructor (games){
         if (games) {
-            this.userData = games.userData
+            this.userId = games.userId
             this.gameData = games.gameData
             this.blockData = games.blockData
         }
-    }
-
-    getGames() {
-        return { userData: this.userData, gameData: this.gameData, blockData: this.blockData }
     }
 }
 
