@@ -12,31 +12,33 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play'),
     description: description.join('\n'),
-    aliases: ['p', 'paly'],
+    aliases: ['t', 'paly'],
     execute(message, client, commandArgs) {
         commandArgs.shift()
 
         if (commandArgs[0] != 'end') {
             let OmokData
 
-            if (commandArgs[0] != 'now') {
-                if (!client.gameData.has(message.channel.id)) {
-                    OmokData = new Omok()
-                    OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
-                } else {
-                    OmokData = new Omok(client.gameData.get(message.channel.id))
-                    OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
-                }
-
-                client.gameData.set(message.channel.id, OmokData.getGames())
-                message.channel.send(OmokData.gameDataRendering())
-
-                if (OmokData.cheakGameOver()) {
-                    return this.execute(message, client, [null, 'end'])
-                }
+            if (!client.gameData.has(message.channel.id)) {
+                OmokData = new Omok()
+                OmokData.setUsersData(message.author.id, commandArgs[0].substring(3, commandArgs[0].length - 1))
             } else {
                 OmokData = new Omok(client.gameData.get(message.channel.id))
-                message.channel.send(OmokData.gameDataRendering())
+                if (commandArgs[0] != 'now') OmokData.pushData(message.author.id, commandArgs[0], commandArgs[1])
+            }
+
+            if (commandArgs[0] != 'now') client.gameData.set(message.channel.id, OmokData.getGames())
+            message.reply(OmokData.gameDataRendering()).then(() => {
+                const filter = m => OmokData.getFirstUserId() === m.author.id
+
+                message.channel.awaitMessages({ filter, time: 1000 * 60 * 5, max: 1, errors: ['time'] })
+                    .catch(() => {
+                        return this.execute(message, client, [null, 'end'])
+                    })
+            })
+
+            if (OmokData.cheakGameOver()) {
+                return this.execute(message, client, [null, 'end'])
             }
         } else {
             client.gameData.delete(message.channel.id)

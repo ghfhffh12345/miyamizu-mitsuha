@@ -59,6 +59,10 @@ class Omok {
         return { userData: this.userData, gameData: this.gameData }
     }
 
+    getFirstUserId() {
+        return this.userData[0].id
+    }
+
     cheakGameOver() {
         if (this.line != undefined) {
             const cheakDataList = this.gameData[this.line]
@@ -82,7 +86,6 @@ class Omok {
             // diagonal left
             lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
             lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
-            console.log(lineCount)
             if (lineCount == 5) return true
             return false
         }
