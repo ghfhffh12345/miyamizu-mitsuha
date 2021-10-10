@@ -38,15 +38,13 @@ class Omok {
         this.line = parseInt(line, 10) - 1
         this.number = parseInt(number, 10)
 
-        if (this.userData[0].id == userId && !isNaN(this.line) && !isNaN(this.number)) {
-            if (this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11 && this.cheakStoneInGame(this.line, this.number)) {
-                this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
-                this.userData.push(this.userData[0])
-                this.userData.shift()
-            } else {
-                this.line = undefined
-                this.number = undefined
-            }
+        if (!isNaN(this.line) && !isNaN(this.number) && this.userData[0].id == userId && this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11 && this.cheakStoneInGame(this.line, this.number)) {
+            this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
+            this.userData.push(this.userData[0])
+            this.userData.shift()
+        } else {
+            this.line = undefined
+            this.number = undefined
         }
     }
 
@@ -64,31 +62,30 @@ class Omok {
     }
 
     cheakGameOver() {
-        if (this.line != undefined) {
-            const cheakDataList = this.gameData[this.line]
-            const cheakData = cheakDataList.find(e => e.number == this.number)
+        if (this.line == undefined) return
+        const cheakDataList = this.gameData[this.line]
+        const cheakData = cheakDataList.find(e => e.number == this.number)
 
-            // horizontal
-            let lineCount = this.horizontal_Right(cheakDataList, cheakData, 1)
-            lineCount += this.horizontal_Left(cheakDataList, cheakData, 1) - 1
-            if (lineCount == 5) return true
+        // horizontal
+        let lineCount = this.horizontal_Right(cheakDataList, cheakData, 1)
+        lineCount += this.horizontal_Left(cheakDataList, cheakData, 1) - 1
+        if (lineCount == 5) return true
 
-            // vertical
-            lineCount = this.vertical_Top(cheakData, this.line, 1)
-            lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
-            if (lineCount == 5) return true
+        // vertical
+        lineCount = this.vertical_Top(cheakData, this.line, 1)
+        lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
+        if (lineCount == 5) return true
 
-            // diagonal right
-            lineCount = this.diagonal_Top_Right(cheakData, this.line, 1)
-            lineCount += this.diagonal_Bottom_Left(cheakData, this.line, 1) - 1
-            if (lineCount == 5) return true
+        // diagonal right
+        lineCount = this.diagonal_Top_Right(cheakData, this.line, 1)
+        lineCount += this.diagonal_Bottom_Left(cheakData, this.line, 1) - 1
+        if (lineCount == 5) return true
 
-            // diagonal left
-            lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
-            lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
-            if (lineCount == 5) return true
-            return false
-        }
+        // diagonal left
+        lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
+        lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
+        if (lineCount == 5) return true
+        return false
     }
 
     horizontal_Right(array, element, number) {
