@@ -38,7 +38,11 @@ class Omok {
         this.line = parseInt(line, 10) - 1
         this.number = parseInt(number, 10)
 
-        if (!isNaN(this.line) && !isNaN(this.number) && this.userData[0].id == userId && this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11 && this.cheakStoneInGame(this.line, this.number)) {
+        const format = !isNaN(this.line) && !isNaN(this.number) && this.userData[0].id == userId
+            && this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11
+            && this.cheakStoneInGame(this.line, this.number)
+
+        if (format) {
             this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
             this.userData.push(this.userData[0])
             this.userData.shift()
