@@ -74,16 +74,16 @@ class Omok {
             lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
             if (lineCount == 5) return true
 
-            // // diagonal right
-            // lineCount = this.diagonal_Top_Right(cheakData, this.line, 1)
-            // lineCount += this.diagonal_Bottom_Left(cheakData, this.line, 1) - 1
-            // console.log(lineCount)
-            // if (lineCount == 5) return true
+            // diagonal right
+            lineCount = this.diagonal_Top_Right(cheakData, this.line, 1)
+            lineCount += this.diagonal_Bottom_Left(cheakData, this.line, 1) - 1
+            if (lineCount == 5) return true
 
-            // // diagonal left
-            // lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
-            // lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
-            // if (lineCount == 5) return true
+            // diagonal left
+            lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
+            lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
+            console.log(lineCount)
+            if (lineCount == 5) return true
             return false
         }
     }
@@ -118,41 +118,41 @@ class Omok {
         return number
     }
 
-    // diagonal_Top_Right(element, line, number) {
-    //     const nowLine = line - number
-    //     if (nowLine >= 0) {
-    //         const findData = this.gameData[nowLine].find(e => (e.number == element.number + number) && (e.stone == element.stone))
-    //         if (findData != undefined) return this.vertical_Top(element, line, number + 1)
-    //     }
-    //     return number
-    // }
+    diagonal_Top_Right(element, line, number) {
+        const nowLine = line - number
+        if (nowLine >= 0) {
+            const findData = this.gameData[nowLine].find(e => (e.number == (element.number + number)) && (e.stone == element.stone))
+            if (findData != undefined) return this.diagonal_Top_Right(element, line, number + 1)
+        }
+        return number
+    }
 
-    // diagonal_Top_Left(element, line, number) {
-    //     const nowLine = line - number
-    //     if (nowLine >= 0) {
-    //         const findData = this.gameData[nowLine].find(e => (e.number + number == element.number) && (e.stone == element.stone))
-    //         if (findData != undefined) return this.vertical_Top(element, line, number + 1)
-    //     }
-    //     return number
-    // }
+    diagonal_Top_Left(element, line, number) {
+        const nowLine = line - number
+        if (nowLine >= 0) {
+            const findData = this.gameData[nowLine].find(e => (e.number == (element.number - number)) && (e.stone == element.stone))
+            if (findData != undefined) return this.diagonal_Top_Left(element, line, number + 1)
+        }
+        return number
+    }
 
-    // diagonal_Bottom_Right(element, line, number) {
-    //     const nowLine = line + number
-    //     if (nowLine < this.gameData.length) {
-    //         const findData = this.gameData[nowLine].find(e => (e.number == element.number + number) && (e.stone == element.stone))
-    //         if (findData != undefined) return this.vertical_Top(element, line, number + 1)
-    //     }
-    //     return number
-    // }
+    diagonal_Bottom_Right(element, line, number) {
+        const nowLine = line + number
+        if (nowLine < this.gameData.length) {
+            const findData = this.gameData[nowLine].find(e => (e.number == (element.number + number)) && (e.stone == element.stone))
+            if (findData != undefined) return this.diagonal_Top_Right(element, line, number + 1)
+        }
+        return number
+    }
 
-    // diagonal_Bottom_Left(element, line, number) {
-    //     const nowLine = line + number
-    //     if (nowLine < this.gameData.length) {
-    //         const findData = this.gameData[nowLine].find(e => (e.number + number == element.number) && (e.stone == element.stone))
-    //         if (findData != undefined) return this.vertical_Top(element, line, number + 1)
-    //     }
-    //     return number
-    // }
+    diagonal_Bottom_Left(element, line, number) {
+        const nowLine = line + number
+        if (nowLine < this.gameData.length) {
+            const findData = this.gameData[nowLine].find(e => (e.number == (element.number - number)) && (e.stone == element.stone))
+            if (findData != undefined) return this.diagonal_Bottom_Left(element, line, number + 1)
+        }
+        return number
+    }
 }
 
 exports.Omok = Omok
