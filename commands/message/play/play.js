@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (commandArgs[0] != 'now') client.gameData.set(message.channel.id, OmokData.getGames())
-            message.reply(OmokData.OmokRendering()).then(() => {
+            message.reply(`<@${OmokData.getFirstUserId()}>\n` + OmokData.OmokRendering()).then(() => {
                 const filter = m => OmokData.getFirstUserId() === m.author.id
 
                 message.channel.awaitMessages({ filter, time: 1000 * 60 * 5, max: 1, errors: ['time'] })

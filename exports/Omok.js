@@ -69,27 +69,31 @@ class Omok extends BlockGameRendering {
 
         // horizontal comparison
         let elements = { array: cheakDataList, element: cheakData, number: 1 }
-        let lineCount = this.horizontal(elements, (n, n2) => n - n2)
-        lineCount += this.horizontal(elements, (n, n2) => n + n2) - 1
-        if (lineCount == 5) return true
+        if (this.cheakGameOverLine((...args) => this.horizontal(...args), elements, (n, n2) => n - n2, (n, n2) => n + n2)) return true
 
         // vertical comparison
         elements = { element: cheakData, line: this.line, number: 1 }
-        lineCount = this.vertical(elements, (n, n2) => n - n2, e => e >= 0)
-        lineCount += this.vertical(elements, (n, n2) => n + n2, e => e < this.gameData.length) - 1
-        if (lineCount == 5) return true
+        if (this.cheakGameOverLine((...args) => this.vertical(...args), elements,
+        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0 },
+        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length })) return true
 
         // diagonal right comparison
-        lineCount = this.diagonal(elements, (n, n2) => n - n2, e => e >= 0, (n, n2) => n + n2)
-        lineCount += this.diagonal(elements, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n - n2) - 1
-        if (lineCount == 5) return true
+        if (this.cheakGameOverLine((...args) => this.diagonal(...args), elements,
+        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0, comparison_value2: (n, n2) => n + n2 },
+        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length, comparison_value2: (n, n2) => n - n2 })) return true
 
         // diagonal left comparison
-        lineCount = this.diagonal(elements, (n, n2) => n - n2, e => e >= 0, (n, n2) => n - n2)
-        lineCount += this.diagonal(elements, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n + n2) - 1
-        if (lineCount == 5) return true
+        if (this.cheakGameOverLine((...args) => this.diagonal(...args), elements,
+        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0, comparison_value2: (n, n2) => n - n2 },
+        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length, comparison_value2: (n, n2) => n + n2 })) return true
 
         return false
+    }
+
+    cheakGameOverLine(func, elements, infunc, infunc2) {
+        let lineCount = func(elements, infunc)
+        lineCount += func(elements, infunc2) - 1
+        if (lineCount == 5) return true
     }
 
     horizontal(data, comparison_value) {
@@ -99,22 +103,26 @@ class Omok extends BlockGameRendering {
         return number
     }
 
-    vertical(data, comparison_value, comparison) {
+    vertical(data, infunc) {
         let { element, line, number } = data
+        const { comparison_value, comparison } = infunc
+
         const nowLine = comparison_value(line, number)
         if (comparison(nowLine)) {
             const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
-            if (findData != undefined) return this.vertical({ element, line, number: ++number }, comparison_value, comparison)
+            if (findData != undefined) return this.vertical({ element, line, number: ++number }, infunc)
         }
         return number
     }
 
-    diagonal(data, comparison_value, comparison, comparison_value2) {
+    diagonal(data, infunc) {
         let { element, line, number } = data
+        const { comparison_value, comparison, comparison_value2 } = infunc
+
         const nowLine = comparison_value(line, number)
         if (comparison(nowLine)) {
             const findData = this.gameData[nowLine].find(e => (e.number == comparison_value2(element.number, number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal({ element, line, number: ++number }, comparison_value, comparison, comparison_value2)
+            if (findData != undefined) return this.diagonal({ element, line, number: ++number }, infunc)
         }
         return number
     }
