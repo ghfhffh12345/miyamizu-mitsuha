@@ -1,45 +1,33 @@
-class Omok {
-    constructor(games) {
+const { BlockGameRendering } = require("./BlockGameRendering");
+
+class Omok extends BlockGameRendering {
+    constructor (games) {
         if (games) {
+            super(games.gameData)
             this.userData = games.userData
-            this.gameData = games.gameData
+        } else {
+            super([[], [], [], [], [], [], [], [], [], []])
         }
     }
 
-    gameDataRendering() {
-        let lineData = this.getBaseLine()
-
-        this.gameData.forEach((element, index) => {
-            const LineIndex = index + 1
-            element.forEach(stonData => {
-                lineData[LineIndex] = this.StringChange(lineData[LineIndex], stonData.number, stonData.stone)
-            })
-            lineData[LineIndex] = this.getNumberList()[index] + lineData[LineIndex]
-        })
-
-        return `<@${this.userData[0].id}>\n` + lineData.join('\n').replace(/a/gi, '🔵').replace(/b/gi, '🔴')
+    OmokRendering() {
+        return (this.getStartList() + '\n' + this.gameDataRendering()).replace(/a/gi, '🔵').replace(/b/gi, '🔴')
     }
 
-    StringChange(string, number, change) {
-        return string.substring(0, number - 1) + change + string.substring(number, string.length)
+    getStartList() {
+        return ['⬛1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟']
+    }
+
+    LineProcessing(result, index) {
+        return this.getNumberList()[index] + result
     }
 
     getNumberList() {
         return ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
     }
 
-    getBaseLine() {
-        const BaseLine = ['⬛1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟']
-        const NumberList = this.getNumberList()
-        for (let i = 0; i < 10; i++) {
-            BaseLine.push(`⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛`)
-        }
-        return BaseLine
-    }
-
     setUsersData(first_user, second_user) {
-        this.userData = [{ id: first_user, stone: 'a' }, { id: second_user, stone: 'b' }]
-        this.gameData = [[], [], [], [], [], [], [], [], [], []]
+        this.userData = [{ id: first_user, block: 'a' }, { id: second_user, block: 'b' }]
     }
 
     pushData(userId, line, number) {
@@ -49,9 +37,10 @@ class Omok {
         const format = !isNaN(this.line) && !isNaN(this.number) && this.userData[0].id == userId
             && this.line > -1 && this.line < 11 && this.number > 0 && this.number < 11
             && this.cheakStoneInGame(this.line, this.number)
+        if (!format) return
 
         if (format) {
-            this.gameData[this.line].push({ number: this.number, stone: this.userData[0].stone })
+            this.gameData[this.line].push({ number: this.number, block: this.userData[0].block })
             this.userData.push(this.userData[0])
             this.userData.shift()
         } else {
@@ -78,90 +67,54 @@ class Omok {
         const cheakDataList = this.gameData[this.line]
         const cheakData = cheakDataList.find(e => e.number == this.number)
 
-        // horizontal
-        let lineCount = this.horizontal_Right(cheakDataList, cheakData, 1)
-        lineCount += this.horizontal_Left(cheakDataList, cheakData, 1) - 1
+        // horizontal comparison
+        let elements = { array: cheakDataList, element: cheakData, number: 1 }
+        let lineCount = this.horizontal(elements, (n, n2) => n - n2)
+        lineCount += this.horizontal(elements, (n, n2) => n + n2) - 1
         if (lineCount == 5) return true
 
-        // vertical
-        lineCount = this.vertical_Top(cheakData, this.line, 1)
-        lineCount += this.vertical_Bottom(cheakData, this.line, 1) - 1
+        // vertical comparison
+        elements = { element: cheakData, line: this.line, number: 1 }
+        lineCount = this.vertical(elements, (n, n2) => n - n2, e => e >= 0)
+        lineCount += this.vertical(elements, (n, n2) => n + n2, e => e < this.gameData.length) - 1
         if (lineCount == 5) return true
 
-        // diagonal right
-        lineCount = this.diagonal_Top_Right(cheakData, this.line, 1)
-        lineCount += this.diagonal_Bottom_Left(cheakData, this.line, 1) - 1
+        // diagonal right comparison
+        lineCount = this.diagonal(elements, (n, n2) => n - n2, e => e >= 0, (n, n2) => n + n2)
+        lineCount += this.diagonal(elements, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n - n2) - 1
         if (lineCount == 5) return true
 
-        // diagonal left
-        lineCount = this.diagonal_Top_Left(cheakData, this.line, 1)
-        lineCount += this.diagonal_Bottom_Right(cheakData, this.line, 1) - 1
+        // diagonal left comparison
+        lineCount = this.diagonal(elements, (n, n2) => n - n2, e => e >= 0, (n, n2) => n - n2)
+        lineCount += this.diagonal(elements, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n + n2) - 1
         if (lineCount == 5) return true
+
         return false
     }
 
-    horizontal_Right(array, element, number) {
-        const findData = array.find(e => (e.number == element.number + number) && (e.stone == element.stone))
-        if (findData != undefined) return this.horizontal_Right(array, element, number + 1)
+    horizontal(data, comparison_value) {
+        let { array, element, number } = data
+        const findData = array.find(e => (e.number == comparison_value(element.number, number)) && (e.block == element.block))
+        if (findData != undefined) return this.horizontal({ array, element, number: ++number }, comparison_value)
         return number
     }
 
-    horizontal_Left(array, element, number) {
-        const findData = array.find(e => (e.number == element.number - number) && (e.stone == element.stone))
-        if (findData != undefined) return this.horizontal_Left(array, element, number + 1)
-        return number
-    }
-
-    vertical_Top(element, line, number) {
-        const nowLine = line - number
-        if (nowLine >= 0) {
+    vertical(data, comparison_value, comparison) {
+        let { element, line, number } = data
+        const nowLine = comparison_value(line, number)
+        if (comparison(nowLine)) {
             const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
-            if (findData != undefined) return this.vertical_Top(element, line, number + 1)
+            if (findData != undefined) return this.vertical({ element, line, number: ++number }, comparison_value, comparison)
         }
         return number
     }
 
-    vertical_Bottom(element, line, number) {
-        const nowLine = line + number
-        if (nowLine < this.gameData.length) {
-            const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
-            if (findData != undefined) return this.vertical_Top(element, line, number + 1)
-        }
-        return number
-    }
-
-    diagonal_Top_Right(element, line, number) {
-        const nowLine = line - number
-        if (nowLine >= 0) {
-            const findData = this.gameData[nowLine].find(e => (e.number == (element.number + number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal_Top_Right(element, line, number + 1)
-        }
-        return number
-    }
-
-    diagonal_Top_Left(element, line, number) {
-        const nowLine = line - number
-        if (nowLine >= 0) {
-            const findData = this.gameData[nowLine].find(e => (e.number == (element.number - number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal_Top_Left(element, line, number + 1)
-        }
-        return number
-    }
-
-    diagonal_Bottom_Right(element, line, number) {
-        const nowLine = line + number
-        if (nowLine < this.gameData.length) {
-            const findData = this.gameData[nowLine].find(e => (e.number == (element.number + number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal_Top_Right(element, line, number + 1)
-        }
-        return number
-    }
-
-    diagonal_Bottom_Left(element, line, number) {
-        const nowLine = line + number
-        if (nowLine < this.gameData.length) {
-            const findData = this.gameData[nowLine].find(e => (e.number == (element.number - number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal_Bottom_Left(element, line, number + 1)
+    diagonal(data, comparison_value, comparison, comparison_value2) {
+        let { element, line, number } = data
+        const nowLine = comparison_value(line, number)
+        if (comparison(nowLine)) {
+            const findData = this.gameData[nowLine].find(e => (e.number == comparison_value2(element.number, number)) && (e.stone == element.stone))
+            if (findData != undefined) return this.diagonal({ element, line, number: ++number }, comparison_value, comparison, comparison_value2)
         }
         return number
     }
