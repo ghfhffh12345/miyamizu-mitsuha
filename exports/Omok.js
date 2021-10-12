@@ -68,63 +68,75 @@ class Omok extends BlockGameRendering {
         const cheakData = cheakDataList.find(e => e.number == this.number)
 
         // horizontal comparison
-        let elements = { array: cheakDataList, element: cheakData, number: 1 }
-        if (this.cheakGameOverLine((...args) => this.horizontal(...args), elements, (n, n2) => n - n2, (n, n2) => n + n2)) return true
+        let elements = [ cheakDataList, cheakData, 1 ]
+        if (this.horizontal_Right(...elements) + this.horizontal_Left(...elements) == 6) return true
 
         // vertical comparison
-        elements = { element: cheakData, line: this.line, number: 1 }
-        if (this.cheakGameOverLine((...args) => this.vertical(...args), elements,
-        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0 },
-        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length })) return true
+        elements = [ cheakData, this.line, 1 ]
+        if (this.vertical_Top(...elements) + this.vertical_Bottom(...elements) == 6) return true
 
         // diagonal right comparison
-        if (this.cheakGameOverLine((...args) => this.diagonal(...args), elements,
-        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0, comparison_value2: (n, n2) => n + n2 },
-        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length, comparison_value2: (n, n2) => n - n2 })) return true
+        if (this.diagonal_Top_Right(...elements) + this.diagonal_Bottom_Left(...elements) == 6) return true
 
         // diagonal left comparison
-        if (this.cheakGameOverLine((...args) => this.diagonal(...args), elements,
-        { comparison_value: (n, n2) => n - n2, comparison: e => e >= 0, comparison_value2: (n, n2) => n - n2 },
-        { comparison_value: (n, n2) => n + n2, comparison: e => e < this.gameData.length, comparison_value2: (n, n2) => n + n2 })) return true
-
+        if (this.diagonal_Top_Left(...elements) + this.diagonal_Bottom_Right(...elements) == 6) return true
         return false
     }
 
-    cheakGameOverLine(func, elements, infunc, infunc2) {
-        let lineCount = func(elements, infunc)
-        lineCount += func(elements, infunc2) - 1
-        if (lineCount == 5) return true
-    }
-
-    horizontal(data, comparison_value) {
-        let { array, element, number } = data
+    horizontal(array, element, number, comparison_value) {
         const findData = array.find(e => (e.number == comparison_value(element.number, number)) && (e.block == element.block))
-        if (findData != undefined) return this.horizontal({ array, element, number: ++number }, comparison_value)
+        if (findData != undefined) return this.horizontal(array, element, ++number, comparison_value)
         return number
     }
 
-    vertical(data, infunc) {
-        let { element, line, number } = data
-        const { comparison_value, comparison } = infunc
+    horizontal_Right(array, element, number) {
+        return this.horizontal(array, element, number, (n, n2) => n + n2)
+    }
 
+    horizontal_Left(array, element, number) {
+        return this.horizontal(array, element, number, (n, n2) => n - n2)
+    }
+
+    vertical(element, line, number, comparison_value, comparison) {
         const nowLine = comparison_value(line, number)
         if (comparison(nowLine)) {
             const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
-            if (findData != undefined) return this.vertical({ element, line, number: ++number }, infunc)
+            if (findData != undefined) return this.vertical(element, line, ++number, comparison_value, comparison)
         }
         return number
     }
 
-    diagonal(data, infunc) {
-        let { element, line, number } = data
-        const { comparison_value, comparison, comparison_value2 } = infunc
+    vertical_Top(element, line, number) {
+        return this.vertical(element, line, number, (n, n2) => n - n2, e => e >= 0)
+    }
 
+    vertical_Bottom(element, line, number) {
+        return this.vertical(element, line, number, (n, n2) => n + n2, e => e < this.gameData.length)
+    }
+
+    diagonal(element, line, number, comparison_value, comparison, comparison_value2) {
         const nowLine = comparison_value(line, number)
         if (comparison(nowLine)) {
             const findData = this.gameData[nowLine].find(e => (e.number == comparison_value2(element.number, number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal({ element, line, number: ++number }, infunc)
+            if (findData != undefined) return this.diagonal(element, line, ++number, comparison_value, comparison, comparison_value2)
         }
         return number
+    }
+
+    diagonal_Top_Right(element, line, number) {
+        return this.diagonal(element, line, number, (n, n2) => n - n2, e => e >= 0, (n, n2) => n + n2)
+    }
+
+    diagonal_Top_Left(element, line, number) {
+        return this.diagonal(element, line, number, (n, n2) => n - n2, e => e >= 0, (n, n2) => n - n2)
+    }
+
+    diagonal_Bottom_Right(element, line, number) {
+        return this.diagonal(element, line, number, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n + n2)
+    }
+
+    diagonal_Bottom_Left(element, line, number) {
+        return this.diagonal(element, line, number, (n, n2) => n + n2, e => e < this.gameData.length, (n, n2) => n - n2)
     }
 }
 
