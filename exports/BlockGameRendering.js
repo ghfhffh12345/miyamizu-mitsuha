@@ -26,8 +26,8 @@ class BlockGameRendering {
         return '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛'
     }
 
-    LineProcessing() {
-        return ''
+    LineProcessing(result) {
+        return result
     }
 
     static stringChange(string, change, index) {

@@ -1,6 +1,6 @@
-const { BlockGameRendering } = require("./BlockGameRendering");
+const { OmokLineSet } = require("./OmoklineSet");
 
-class Omok extends BlockGameRendering {
+class Omok extends OmokLineSet {
     constructor (games) {
         if (games) {
             super(games.gameData)
@@ -83,12 +83,6 @@ class Omok extends BlockGameRendering {
         return false
     }
 
-    horizontal(array, element, number, comparison_value) {
-        const findData = array.find(e => (e.number == comparison_value(element.number, number)) && (e.block == element.block))
-        if (findData != undefined) return this.horizontal(array, element, ++number, comparison_value)
-        return number
-    }
-
     horizontal_Right(array, element, number) {
         return this.horizontal(array, element, number, (n, n2) => n + n2)
     }
@@ -97,30 +91,12 @@ class Omok extends BlockGameRendering {
         return this.horizontal(array, element, number, (n, n2) => n - n2)
     }
 
-    vertical(element, line, number, comparison_value, comparison) {
-        const nowLine = comparison_value(line, number)
-        if (comparison(nowLine)) {
-            const findData = this.gameData[nowLine].find(e => (e.number == element.number) && (e.stone == element.stone))
-            if (findData != undefined) return this.vertical(element, line, ++number, comparison_value, comparison)
-        }
-        return number
-    }
-
     vertical_Top(element, line, number) {
         return this.vertical(element, line, number, (n, n2) => n - n2, e => e >= 0)
     }
 
     vertical_Bottom(element, line, number) {
         return this.vertical(element, line, number, (n, n2) => n + n2, e => e < this.gameData.length)
-    }
-
-    diagonal(element, line, number, comparison_value, comparison, comparison_value2) {
-        const nowLine = comparison_value(line, number)
-        if (comparison(nowLine)) {
-            const findData = this.gameData[nowLine].find(e => (e.number == comparison_value2(element.number, number)) && (e.stone == element.stone))
-            if (findData != undefined) return this.diagonal(element, line, ++number, comparison_value, comparison, comparison_value2)
-        }
-        return number
     }
 
     diagonal_Top_Right(element, line, number) {
