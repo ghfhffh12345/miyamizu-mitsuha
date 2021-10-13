@@ -18,7 +18,7 @@ class Omok extends OmokLineSet {
         return ['⬛1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟']
     }
 
-    LineProcessing(result, index) {
+    LineLastProcessing(result, index) {
         return this.getNumberList()[index] + result
     }
 

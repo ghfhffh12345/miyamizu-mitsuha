@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { Tetris } = require('../../../exports/Tetris')
+const { TetrisGameRendering } = require('../../../exports/TetrisGameRendering')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,7 +7,7 @@ module.exports = {
     description: '[Command] => 테트리스 게임을 시작합니다.',
     aliases: ['t'],
     execute(message, client, commandArgs) {
-        const tetris = new Tetris({ userId: message.author.id })
-        message.reply(tetris.gameDataRendering())
+        const tetris = new TetrisGameRendering()
+        message.reply(tetris.TetrisRendering())
     }
 }

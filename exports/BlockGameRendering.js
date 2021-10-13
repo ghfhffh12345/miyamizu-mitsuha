@@ -7,9 +7,9 @@ class BlockGameRendering {
         let result = this.gameBase()
         this.gameData.forEach((element, index) => {
             element.forEach(element2 => {
-                result[index] = BlockGameRendering.stringChange(result[index], element2.block, element2.number)
+                result = this.LineProcessing(result, element, index, element2)
             })
-            result[index] = this.LineProcessing(result[index], index)
+            result[index] = this.LineLastProcessing(result[index], index)
         })
         return result.join('\n')
     }
@@ -26,7 +26,12 @@ class BlockGameRendering {
         return '⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛'
     }
 
-    LineProcessing(result) {
+    LineLastProcessing(result) {
+        return result
+    }
+
+    LineProcessing(result, element, index, element2) {
+        result[index] = BlockGameRendering.stringChange(result[index], element2.block, element2.number)
         return result
     }
 
