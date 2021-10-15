@@ -30,4 +30,9 @@ for (const file of eventFiles) {
     }
 }
 
+OmokLineSensorTester
+    .horizontalTester()
+    .verticalTester()
+    .diagonalTester()
+
 client.login(token)
