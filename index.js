@@ -4,11 +4,13 @@ const { token } = config
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_INTEGRATIONS"]})
 
 const fs = require('fs')
+const eventEmitter = require('events')
 const { OmokLineSensorTester } = require('./test/OmokLIneSensorTester')
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
 const commandFolders = fs.readdirSync('./commands')
 client.commands = new Collection()
 client.gameData = new Collection()
+client.gameOver = new eventEmitter()
 
 for (const folder of commandFolders) {
     const commandFolders2 = fs.readdirSync(`./commands/${folder}`)
