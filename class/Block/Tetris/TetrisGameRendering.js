@@ -1,4 +1,4 @@
-const { BlockGameRendering } = require("./BlockGameRendering");
+const { BlockGameRendering } = require("../BlockGameRendering");
 
 class TetrisGameRendering extends BlockGameRendering {
     constructor (games) {

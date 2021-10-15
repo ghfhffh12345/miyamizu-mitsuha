@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { Omok } = require('../../../exports/Omok')
+const { Omok } = require('../../../class/Block/Omok/Omok')
 const description = [
     '[Command] [Author User Mention] => 해당 채널에 오목 게임을 시작합니다.',
     '[Command] [Line] [Number] => 해당 채널의 오목 게임 참가자라면,',

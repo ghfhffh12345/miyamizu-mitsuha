@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { TetrisGameRendering } = require('../../../exports/TetrisGameRendering')
+const { TetrisGameRendering } = require('../../../class/Block/Tetris/TetrisGameRendering')
 
 module.exports = {
     data: new SlashCommandBuilder()

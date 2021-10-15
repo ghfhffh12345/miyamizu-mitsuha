@@ -4,6 +4,7 @@ const { token } = config
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_INTEGRATIONS"]})
 
 const fs = require('fs')
+const { OmokLineSensorTester } = require('./test/OmokLIneSensorTester')
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
 const commandFolders = fs.readdirSync('./commands')
 client.commands = new Collection()
