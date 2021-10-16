@@ -36,7 +36,7 @@ module.exports = {
                     })
             })
 
-            if (!OmokData.cheakGameOver()) {
+            if (OmokData.cheakGameOver()) {
                 return this.execute(message, client, [null, 'end'])
             }
         } else {
