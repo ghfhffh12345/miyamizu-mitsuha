@@ -8,11 +8,6 @@ const description = [
     '[Command] end => 해당 채널의 오목 게임을 종료합니다.',
 ]
 
-function gameOverProcessing(client) {
-    client.gameOver.emit('gameOver')
-    client.gameOver.removeAllListeners()
-}
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play'),
@@ -23,7 +18,6 @@ module.exports = {
 
         if (commandArgs[0] != 'end') {
             let OmokData
-            const gameOver = false
 
             if (!client.gameData.has(message.channel.id)) {
                 OmokData = new Omok()
@@ -36,22 +30,15 @@ module.exports = {
             if (commandArgs[0] != 'now') client.gameData.set(message.channel.id, OmokData.getGames())
             message.reply(`<@${OmokData.getFirstUserId()}>\n` + OmokData.OmokRendering()).then(() => {
                 const filter = m => OmokData.getFirstUserId() === m.author.id
-
-                message.channel.awaitMessages({ filter, time: 1000 * 60 * 5, max: 1, errors: ['time'] })
+                message.channel.awaitMessages({ filter, time: 1000 * 5, max: 1, errors: ['time'] })
                     .catch(() => {
-                        gameOverProcessing(client)
                         return this.execute(message, client, [null, 'end'])
                     })
             })
 
-            if (OmokData.cheakGameOver()) {
-                gameOverProcessing(client)
+            if (!OmokData.cheakGameOver()) {
                 return this.execute(message, client, [null, 'end'])
             }
-
-            client.gameOver.once('gameOver', () => {
-                gameOver = true
-            })
         } else {
             client.gameData.delete(message.channel.id)
             message.reply('이 채널의 게임판을 종료했습니다.')

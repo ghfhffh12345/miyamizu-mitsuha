@@ -60,6 +60,7 @@ class Omok extends BlockGameRendering {
     }
 
     getFirstUserId() {
+        if (!this.userData) return
         return this.userData[0].id
     }
 
