@@ -18,6 +18,7 @@ module.exports = {
 
         if (commandArgs[0] != 'end') {
             let OmokData
+            let gameOver = false
 
             if (!client.gameData.has(message.channel.id)) {
                 OmokData = new Omok()
@@ -32,14 +33,22 @@ module.exports = {
                 const filter = m => OmokData.getFirstUserId() === m.author.id
                 message.channel.awaitMessages({ filter, time: 1000 * 5, max: 1, errors: ['time'] })
                     .catch(() => {
+                        if (!gameOver) return
                         return this.execute(message, client, [null, 'end'])
                     })
+            })
+
+            client.gameOver.once('gameOver', channelId => {
+                if (channelId == message.channel.id) {
+                    gameOver = true
+                }
             })
 
             if (OmokData.cheakGameOver()) {
                 return this.execute(message, client, [null, 'end'])
             }
         } else {
+            client.gameOver.emit('gameOver')
             client.gameData.delete(message.channel.id)
             message.reply('이 채널의 게임판을 종료했습니다.')
         }
