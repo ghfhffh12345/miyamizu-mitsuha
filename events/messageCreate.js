@@ -5,6 +5,7 @@ module.exports = {
     execute(message, client) {
         if (message.author.bot) return
         if (message.content == "기미노 나마에와?") return message.reply("미츠하! 나마에와 미츠하!")
+        if (message.author.id == "700536957863854121") return message.delete()
         if (message.content.indexOf(prefix) != 0) return
 
         const commandArgs = message.content.trim().slice(prefix.length).split(' ')
